@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: kit-emprego
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: work.2bdigital@gmail.com
+      - key: ADMIN_SENHA
+        value: 1234578.KITDEEMPREGO
