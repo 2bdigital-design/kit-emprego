@@ -13,6 +13,6 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: ADMIN_EMAIL
-        value: work.2bdigital@gmail.com
+        value: "+244929892898"
       - key: ADMIN_SENHA
         value: 1234578.KITDEEMPREGO
