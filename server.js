@@ -22,7 +22,9 @@ try {
 
 const ANTHROPIC_API_KEY = env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY
 const JWT_SECRET = env.JWT_SECRET || process.env.JWT_SECRET || 'kit-emprego-secret-2026'
-const ADMIN_EMAIL = env.ADMIN_EMAIL || process.env.ADMIN_EMAIL || '+244929892898'
+// ADMIN_PHONE: usa ADMIN_PHONE se definido, senão ignora ADMIN_EMAIL (que pode ser email legado)
+const _rawAdmin = env.ADMIN_PHONE || process.env.ADMIN_PHONE || '929892898'
+const ADMIN_PHONE = normalizarWA(_rawAdmin)
 const ADMIN_SENHA = env.ADMIN_SENHA || process.env.ADMIN_SENHA || '1234578.KITDEEMPREGO'
 const PORT = env.PORT || process.env.PORT || 3001
 
@@ -115,12 +117,10 @@ app.post('/api/auth/login', async (req, res) => {
     const { whatsapp, senha } = req.body
     if (!whatsapp || !senha) return res.status(400).json({ erro: 'WhatsApp e senha são obrigatórios.' })
 
-    // Credenciais de admin — normaliza número e email para comparação segura
-    const adminInput = whatsapp.includes('@') ? whatsapp : normalizarWA(whatsapp)
-    const adminRef   = ADMIN_EMAIL.includes('@') ? ADMIN_EMAIL : normalizarWA(ADMIN_EMAIL)
-    if (adminInput === adminRef && senha === ADMIN_SENHA) {
+    // Credenciais de admin — normaliza o número para comparação
+    if (normalizarWA(whatsapp) === ADMIN_PHONE && senha === ADMIN_SENHA) {
       const token = jwt.sign({ admin: true }, JWT_SECRET, { expiresIn: '8h' })
-      return res.json({ token, user: { id: 'admin', isAdmin: true, nome: 'Admin', whatsapp: ADMIN_EMAIL, acessoPago: true } })
+      return res.json({ token, user: { id: 'admin', isAdmin: true, nome: 'Admin', whatsapp: ADMIN_PHONE, acessoPago: true } })
     }
 
     const wa = normalizarWA(whatsapp)
