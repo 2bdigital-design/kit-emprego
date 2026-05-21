@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useKitStore } from '../../store/kitStore'
 
 function formatarWA(valor) {
-  if (valor.includes('@')) return valor
+  // Se contém letras ou @ é email — não formatar de todo
+  if (/[a-zA-Z@]/.test(valor)) return valor
   const digitos = valor.replace(/\D/g, '')
   if (digitos.length <= 3) return digitos
   if (digitos.length <= 6) return `${digitos.slice(0,3)} ${digitos.slice(3)}`
